@@ -3,6 +3,7 @@ import struct
 import logging
 import argparse
 import numpy as np
+import matplotlib.pyplot as plt
 
 def parse_input(arg=None, autoencoder=True):
     """ function used to parse the command line input of the autoencoder """
@@ -94,3 +95,12 @@ def print_image(image, rows, columns):
             print("{:3d}".format(image[i, j]), end="")
         # print a newline since the row has finished
         print()
+    print()
+
+
+def plot_image(image):
+    """ fuction used to plot an image using matplotlib """
+
+    # plot and show the image
+    plt.imshow(image, cmap="gray")
+    plt.show()

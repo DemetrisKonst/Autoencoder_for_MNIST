@@ -1,5 +1,7 @@
-# from tensorflow.keras import Sequential, optimizers
-# from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, LeakyReLU
+import tensorflow as tf
+import tensorflow.keras as keras
+from tensorflow.keras import Sequential, optimizers
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, LeakyReLU
 
 import logging
 from utils import *
@@ -19,9 +21,11 @@ def main(args):
     # y = parse_labelset("../Dataset/train-labels-idx1-ubyte")
 
     print_image(X[0], 28, 28)
+    plot_image(X[0])
     # print(y[0])
 
     print_image(X[1], 28, 28)
+    plot_image(X[1])
     # print(y[1])
 
 
