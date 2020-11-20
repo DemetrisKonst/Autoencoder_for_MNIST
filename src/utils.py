@@ -5,6 +5,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 
+
 def parse_input(arg=None, autoencoder=True):
     """ function used to parse the command line input of the autoencoder """
 
