@@ -1,10 +1,16 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras import Sequential, optimizers
-from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout, LeakyReLU
+from tensorflow.keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Dropout
+from tensorflow.keras.models import Model, load_model
 
 import logging
+import sys
+sys.path.append("../utils")
+sys.path.append("autoencoder_utilities")
+
 from utils import *
+from autoencoder_interface_utils import get_autoencoder_input
 
 
 
@@ -20,13 +26,15 @@ def main(args):
     X = parse_dataset(args.data)
     # y = parse_labelset("../Dataset/train-labels-idx1-ubyte")
 
-    print_image(X[0], 28, 28)
-    plot_image(X[0])
+    # print_image(X[0], 28, 28)
+    # plot_image(X[0])
     # print(y[0])
 
-    print_image(X[1], 28, 28)
-    plot_image(X[1])
+    # print_image(X[1], 28, 28)
+    # plot_image(X[1])
     # print(y[1])
+
+    print(get_autoencoder_input())
 
 
 if __name__ == "__main__":
