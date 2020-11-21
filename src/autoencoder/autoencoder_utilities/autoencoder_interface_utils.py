@@ -234,5 +234,6 @@ def get_autoencoder_input():
     epochs = get_epochs()
     batch_size = get_batch_size()
 
-    # retun the values as a quintuple (5-tuple)
+    # print some newlines and retun the values as a quintuple (5-tuple)
+    print("\n")
     return conv_layers, kernel_sizes, filters, epochs, batch_size

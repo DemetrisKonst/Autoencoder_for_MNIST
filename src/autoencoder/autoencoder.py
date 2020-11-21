@@ -34,8 +34,14 @@ def main(args):
     # plot_image(X[1])
     # print(y[1])
 
-    print(get_autoencoder_input())
+    # can be run with: python3 autoencoder.py -d ../../Dataset/train-images-idx3-ubyte < input.txt
+    conv_layers, kernel_sizes, filters, epochs, batch_size = get_autoencoder_input()
 
+    print("Number of Convolutional Layers: {}".format(conv_layers))
+    print("Kernel Sizes: {}".format(kernel_sizes))
+    print("Filters: {}".format(filters))
+    print("Epochs: {}".format(epochs))
+    print("Batch Size: {}".format(batch_size))
 
 if __name__ == "__main__":
     """ call main() function here """
