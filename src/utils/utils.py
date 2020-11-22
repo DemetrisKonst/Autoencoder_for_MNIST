@@ -92,8 +92,11 @@ def print_image(image, rows, columns):
     for i in range(rows):
         # for each column
         for j in range(columns):
-            # print the value at the coordinate (i, j)
-            print("{:3d}".format(image[i, j]), end="")
+            # print the value at the coordinate (i, j) if it is not 0
+            if image[i, j] != 0:
+                print("{:.3f}".format(image[i, j]), end="")
+            else:
+                print("   ", end="")
         # print a newline since the row has finished
         print()
     print()

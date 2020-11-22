@@ -5,6 +5,7 @@ DEFAULT_KERNEL_SIZE = (3, 3)
 DEFAULT_FILTERS = 16
 DEFAULT_EPOCHS = 50
 DEFAULT_BATCH_SIZE = 32
+DEFAULT_USE_THIRD_MAX_POOL = True
 
 
 def get_number_of_convolutional_layers():
@@ -224,6 +225,33 @@ def get_batch_size():
     return batch_size
 
 
+def get_usage_of_third_maxpool():
+    """ function used to ask the user if he wants to use a third Max Pooling layer """
+
+    # get the answer
+    prompt = "\nWould you like to use a 3rd Max Pooling layer with pool size (7, 7) in the " \
+             "architecture of the Neural Network? (y/n) (default = yes): "
+    use_third_maxpool = input(prompt)
+
+    # keep asking until he gives a valid answer
+    while use_third_maxpool.lower() != "y" and use_third_maxpool.lower() != "yes" and \
+          use_third_maxpool.lower() != "n" and use_third_maxpool.lower() != "no" and \
+          use_third_maxpool != "":
+
+        # print according message and read again input
+        print("Invalid answer, please type (y/n).")
+        use_third_maxpool = input(prompt)
+
+    # check for default answer
+    if use_third_maxpool == "":
+        use_third_maxpool = DEFAULT_USE_THIRD_MAX_POOL
+    else:
+        use_third_maxpool = use_third_maxpool.lower() == "y" or use_third_maxpool.lower() == "yes"
+
+    # return the final value
+    return use_third_maxpool
+
+
 def get_autoencoder_input():
     """ function used to get the input of the autoencoder """
 
@@ -233,7 +261,8 @@ def get_autoencoder_input():
     filters = get_filters(conv_layers)
     epochs = get_epochs()
     batch_size = get_batch_size()
+    use_third_maxpool = get_usage_of_third_maxpool()
 
     # print some newlines and retun the values as a quintuple (5-tuple)
     print("\n")
-    return conv_layers, kernel_sizes, filters, epochs, batch_size
+    return conv_layers, kernel_sizes, filters, epochs, batch_size, use_third_maxpool
