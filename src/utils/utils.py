@@ -53,6 +53,23 @@ def filepath_is_not_valid(filepath):
     return False
 
 
+def filepath_can_be_reached(filepath):
+    """ Function used to check if a filepath can be used to create a file """
+
+    # try to open the filepath to write, and if it throws a FileNotFoundError, then it is invalid
+    try:
+        file = open(filepath, "w")
+        file.close()
+        # delete it
+        os.remove(filepath)
+    # exception was thrown, therefore filepath is invalid
+    except FileNotFoundError:
+        return False
+
+    # return True as the above operations were successful
+    return True
+
+
 def parse_dataset(filepath):
     """ function used to parse the data of a dataset """
 

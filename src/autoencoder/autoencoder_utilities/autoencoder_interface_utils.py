@@ -1,3 +1,7 @@
+import sys
+sys.path.append("../../utils")
+
+from utils import filepath_can_be_reached
 from autoencoder_error_utils import *
 
 DEFAULT_CONV_LAYERS = 3
@@ -6,6 +10,8 @@ DEFAULT_FILTERS = 16
 DEFAULT_EPOCHS = 50
 DEFAULT_BATCH_SIZE = 32
 DEFAULT_USE_THIRD_MAX_POOL = True
+DEFAULT_OPTION = 0
+DEFAULT_GRAPH_OPTION = 1
 
 
 def get_number_of_convolutional_layers():
@@ -266,3 +272,91 @@ def get_autoencoder_input():
     # print some newlines and retun the values as a quintuple (5-tuple)
     print("\n")
     return conv_layers, kernel_sizes, filters, epochs, batch_size, use_third_maxpool
+
+
+def get_option():
+    """ Function used to extract an option (0, 1, 2, 3) from the user after an experiment has
+        been completed """
+
+    # ask the user what he would like to do now
+    prompt = "\nThe following options are now available:\n\t0) Exit the program\n\t1) Repeat " \
+             "experiment with different values for the hyperprameters\n\t2) Show graphs with the " \
+             "results of all the experiments run so far\n\t3) Save the weights of the model\n\n" \
+             "Enter your action (default = 0): "
+    option = input(prompt)
+
+    # make sure that the option given is legit
+    while option != "" and option != "0" and option != "1" and option != "2" and option != "3":
+
+        # ask again as the input was wrong
+        print("Wrong input, the option selected should be one of the following: 0, 1, 2 or 3. " \
+              "Please try again.")
+        option = input(prompt)
+
+    # check for the default value
+    if option == "":
+        option = DEFAULT_OPTION
+    # else, convert it to an int
+    else:
+        option = int(option)
+
+    # return it
+    return option
+
+
+def get_graph_option():
+    """ Function used to extract from the user whether he wants to see a loss vs epochs graph of the
+        current experiment, or a loss vs hyperprameters graph over all the experiments """
+
+    # ask the user
+    prompt = "\nThere are 2 options available regarding the graphs that can be shown:\n\t1) Show " \
+             "the Loss vs Epochs graph of the current experiment\n\t2) Show the Loss vs " \
+             "hyperprameters graph over all the experiments run so far\n\nEnter your option " \
+             "(default = 1): "
+    answer = input(prompt)
+
+    # while the answer is invalid
+    while answer != "" and answer != "1" and answer != "2":
+        # ask again as the input was wrong
+        print("Wrong input, the option selected should be one of the following: 1 or 2. " \
+              "Please try again.")
+        option = input(prompt)
+
+    # check whether the user wants the default option
+    if answer == "":
+        answer = DEFAULT_GRAPH_OPTION
+    # else convert the answer to an integer
+    else:
+        answer = int(answer)
+
+    # return the answer as an integer
+    return answer
+
+
+def get_valid_savepaths():
+    """ Function used to get the paths to save the encoder and autoencoder models """
+
+    # ask the user to give the savepath of the encoder
+    prompt = "\nGive the savepath for the encoder model: "
+    savepath_encoder = input(prompt)
+
+    # keep asking until he gives a valid save path
+    while not filepath_can_be_reached(savepath_encoder):
+
+        # print the error and ask him again
+        print("Wrong path, file can't be opened. Please try again.")
+        savepath_encoder = input(prompt)
+
+    # ask the user to give the savepath of the autoencoder
+    prompt = "\nGive the savepath for the autoencoder model: "
+    savepath_autoencoder = input(prompt)
+
+    # keep asking until he gives a valid save path
+    while not filepath_can_be_reached(savepath_autoencoder):
+
+        # print the error and ask him again
+        print("Wrong path, file can't be opened. Please try again.")
+        savepath_autoencoder = input(prompt)
+
+    # if we get here it means that both savepaths are correct, so return them
+    return savepath_encoder, savepath_autoencoder

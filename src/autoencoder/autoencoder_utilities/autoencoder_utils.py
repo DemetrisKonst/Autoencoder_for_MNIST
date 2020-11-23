@@ -1,8 +1,10 @@
+import numpy as np
+import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras import Sequential, optimizers
 from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, MaxPooling2D, UpSampling2D, LeakyReLU
-from tensorflow.keras.models import Model, load_model
+from tensorflow.keras.models import Model, save_model
 
 
 def create_encoder(rows, columns, conv_layers, kernel_sizes, filters, use_third_max_pooling=True,
@@ -120,3 +122,66 @@ def create_autoencoder(rows, columns, encoder, decoder):
     # create the model and return it
     autoencoder = Model(input, x, name="autoencoder")
     return autoencoder
+
+
+def save_keras_model(model, model_path):
+    """ Function used to save a model in a specific path """
+
+    # just save the model
+    save_model(model, model_path)
+
+
+def show_experiment_graph(history):
+    """ Function used to show the Loss vs Epochs graph of one experiment """
+
+    # get the losses
+    train_losses = history.history["mse"]
+    val_losses = history.history["val_mse"]
+
+    # plot the losses
+    epochs = len(train_losses)
+    plt.xticks(np.arange(0, epochs, 1), np.arange(1, epochs + 1, 1))
+    plt.plot(train_losses, label="Train Loss", color="mediumblue")
+    plt.plot(val_losses, label="Validation Loss", color="darkred")
+
+    # define some more parameters
+    plt.xlabel("Epochs")
+    plt.ylabel("Loss")
+    plt.legend()
+    plt.show()
+
+
+def show_graphs(histories, configurations):
+    """ Function used to plot the losses of a model, for each configuration (experiment) tried """
+
+    # get the number of experiments performed
+    experiments = len(histories)
+
+    # get the last losses of each experiment
+    train_losses = [history.history["mse"][-1] for history in histories]
+    val_losses = [history.history["val_mse"][-1] for history in histories]
+
+    # now fix the x labels to match every experiment
+    xlabels = []
+    # add a label for each configuration
+    for configuration in configurations:
+        # get the values for that configuration
+        conv_layers, kernel_sizes, filters, epochs, batch_size, third_maxpool = configuration
+        # define the string and append it
+        xlabel = "Conv Layers: {}\nKernels: {}\nFilters: {}\nEpochs: {}\nBatch Size: {}\n" \
+                 "Third MaxPool: {}".format(conv_layers, kernel_sizes, filters, epochs, batch_size,
+                                            third_maxpool)
+        xlabels.append(xlabel)
+
+    # define the parameters of the plot
+    plt.xticks(np.arange(experiments), xlabels)
+
+    # plot the losses
+    plt.plot(train_losses, label="Train Loss", color="mediumblue")
+    plt.plot(val_losses, label="Validation Loss", color="darkred")
+
+    # define some more parameters
+    plt.xlabel("Runs")
+    plt.ylabel("Losses")
+    plt.legend()
+    plt.show()

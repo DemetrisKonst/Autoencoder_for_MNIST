@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras import optimizers
-from tensorflow.keras.models import Model
+from tensorflow.keras.models import Model, save_model
 from tensorflow.keras.callbacks import ReduceLROnPlateau
 from sklearn.model_selection import train_test_split
 
@@ -11,8 +11,8 @@ sys.path.append("../utils")
 sys.path.append("autoencoder_utilities")
 
 from utils import *
-from autoencoder_utils import create_encoder, create_decoder, create_autoencoder
-from autoencoder_interface_utils import get_autoencoder_input
+from autoencoder_utils import *
+from autoencoder_interface_utils import get_autoencoder_input, get_option, get_graph_option
 
 
 
@@ -38,27 +38,75 @@ def main(args):
     PANATHA = 13
     X_train, X_val = train_test_split(X, test_size=0.15, random_state=PANATHA, shuffle=True)
 
-    # can be run with: python3 autoencoder.py -d ../../Dataset/train-images-idx3-ubyte < input.txt
-    conv_layers, kernel_sizes, filters, epochs, batch_size, third_maxpool = get_autoencoder_input()
+    # use the list below to keep track of the configurations used for every experiment
+    configurations = []
+    # use the list below to keep track of the histories returned from each experiment
+    histories = []
 
-    # get the encoder and the decoder
-    encoder = create_encoder(rows, columns, conv_layers, kernel_sizes, filters,
-                             use_third_max_pooling=third_maxpool)
-    decoder = create_decoder(rows, columns, conv_layers, kernel_sizes, filters,
-                             use_third_max_pooling=third_maxpool)
+    # the option provided by the user
+    option = 1
 
-    # get the autoencoder
-    autoencoder = create_autoencoder(rows, columns, encoder, decoder)
-    autoencoder.summary()
+    # while the user wants to keep repeating the experiment
+    while option != 0:
 
-    # add a callback to reduce learning rate when validation loss plateaus
-    reduce_lr = ReduceLROnPlateau(monitor="val_loss", factor=1.0/2, patience=4, min_delta=0.005,
-                                  cooldown=0, min_lr=1e-8, verbose=1)
+        # get the configurations of this experiment from the user and update the corresponding list
+        configuration = get_autoencoder_input()
+        configurations.append(configuration)
+        conv_layers, kernel_sizes, filters, epochs, batch_size, third_maxpool = configuration
 
-    # compile and train the autoencoder
-    autoencoder.compile(optimizer=optimizers.Adam(1e-3), loss="mse", metrics=["mse"])
-    history = autoencoder.fit(X_train, X_train, batch_size=batch_size, epochs=epochs, shuffle=True,
-                              validation_data=(X_val, X_val), callbacks=[reduce_lr])
+        # get the encoder and the decoder
+        encoder = create_encoder(rows, columns, conv_layers, kernel_sizes, filters,
+                                 use_third_max_pooling=third_maxpool)
+        decoder = create_decoder(rows, columns, conv_layers, kernel_sizes, filters,
+                                 use_third_max_pooling=third_maxpool)
+
+        # get the autoencoder
+        autoencoder = create_autoencoder(rows, columns, encoder, decoder)
+        print()
+        autoencoder.summary()
+
+        # add a callback to reduce learning rate when validation loss plateaus
+        reduce_lr = ReduceLROnPlateau(monitor="val_loss", factor=1.0/2, patience=4, min_delta=0.005,
+                                      cooldown=0, min_lr=1e-8, verbose=1)
+
+        # compile and train the autoencoder
+        autoencoder.compile(optimizer=optimizers.Adam(1e-3), loss="mse", metrics=["mse"])
+        history = autoencoder.fit(X_train, X_train, batch_size=batch_size, epochs=epochs,
+                                  shuffle=True, validation_data=(X_val, X_val),
+                                  callbacks=[reduce_lr])
+
+        # save this history
+        histories.append(history)
+
+        # get the new option from the user
+        option = get_option()
+
+        # while the user wants to either print the graphs or save the model, keep asking him
+        while option == 2 or option == 3:
+
+            # distinguish which option the user chose
+            if option == 2:
+                # get the next option on which graph to show
+                answer = get_graph_option()
+
+                # distinguish the answer
+                if answer == 1:
+                    # show the graph for the current experiment
+                    show_experiment_graph(history)
+                else:
+                    # call the appropriate function to show the graphs of losses
+                    show_graphs(histories, configurations)
+
+            else:
+                # get the save paths of both models (encoder and autoencoder)
+                encoder_savepath, autoencoder_savepath = get_valid_savepaths()
+
+                # save both models
+                save_keras_model(encoder, encoder_savepath)
+                save_keras_model(autoencoder, autoencoder_savepath)
+
+            # get the new option from the user
+            option = get_option()
 
 
 if __name__ == "__main__":
@@ -70,3 +118,4 @@ if __name__ == "__main__":
     args = parse_input(autoencoder=True)
     # call the main() driver function
     main(args)
+    print("\n")
