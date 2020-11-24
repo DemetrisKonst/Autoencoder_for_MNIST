@@ -45,6 +45,20 @@ def create_encoder(rows, columns, conv_layers, kernel_sizes, filters, use_third_
         # perform batch normalization
         x = BatchNormalization()(x)
 
+        """
+        # second convolution in the same "set" of layers
+        if not use_leaky_relu:
+            x = Conv2D(filters=filters[layer], kernel_size=kernel_sizes[layer], activation="relu",
+                       padding="same")(x)
+        else:
+            x = Conv2D(filters=filters[layer], kernel_size=kernel_sizes[layer], activation="linear",
+                       padding="same")(x)
+            x = LeakyReLU(alpha=leaky_relu_alpha)(x)
+
+        # second batch normalization in the same "set" of layers
+        x = BatchNormalization()(x)
+        """
+
         # if we are placing a the 3rd layer and MaxPooling should be placed, do it
         if layer == 2 and use_third_max_pooling:
             x = MaxPooling2D(pool_size=(7, 7))(x)
@@ -83,11 +97,25 @@ def create_decoder(rows, columns, conv_layers, kernel_sizes, filters, use_third_
                        padding="same")(x)
         else:
             x = Conv2D(filters=filters[-1], kernel_size=kernel_sizes[-1], activation="linear",
-                       padding="same")(input)
+                       padding="same")(x)
             x = LeakyReLU(alpha=leaky_relu_alpha)(x)
 
         # add batch normalization
         x = BatchNormalization()(x)
+
+        """
+        # second deconvolution in the same "set" of layers
+        if not use_leaky_relu:
+            x = Conv2D(filters=filters[layer], kernel_size=kernel_sizes[layer], activation="relu",
+                       padding="same")(x)
+        else:
+            x = Conv2D(filters=filters[-1], kernel_size=kernel_sizes[-1], activation="linear",
+                       padding="same")(input)
+            x = LeakyReLU(alpha=leaky_relu_alpha)(x)
+
+        # second batch normalization in the same "set" of layers
+        x = BatchNormalization()(x)
+        """
 
         # if we are in the third layer and a 3rd Max Pooling was placed, place an UpSampling
         if layer == 2 and use_third_max_pooling:
