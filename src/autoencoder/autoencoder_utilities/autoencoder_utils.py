@@ -4,7 +4,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras import Sequential, optimizers
 from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, MaxPooling2D, UpSampling2D, LeakyReLU
-from tensorflow.keras.models import Model, save_model
+from tensorflow.keras.models import Model
 
 
 def create_encoder(rows, columns, conv_layers, kernel_sizes, filters, use_third_max_pooling=True,
@@ -150,7 +150,7 @@ def create_autoencoder(rows, columns, encoder, decoder):
     # create the model and return it
     autoencoder = Model(input, x, name="autoencoder")
     return autoencoder
-    
+
 
 def show_experiment_graph(history):
     """ Function used to show the Loss vs Epochs graph of one experiment """

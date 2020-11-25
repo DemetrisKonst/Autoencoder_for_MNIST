@@ -35,8 +35,8 @@ def main(args):
     X = X / 255.
 
     # split data to training and validation
-    PELATES = 13
-    X_train, X_val = train_test_split(X, test_size=0.15, random_state=PELATES, shuffle=True)
+    PANATHA = 13
+    X_train, X_val = train_test_split(X, test_size=0.15, random_state=PANATHA, shuffle=True)
 
     # use the list below to keep track of the configurations used for every experiment
     configurations = []

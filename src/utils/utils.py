@@ -37,6 +37,11 @@ def parse_input(arg=None, autoencoder=True):
         parser.add_argument("-tl", "--testlabels", type=str, action="store",
                             metavar="testing_labels_path", required=True, help=help)
 
+        # add an argumrnt for the path of the saved encoder model
+        help = "The full/relative path to the .h5 file containing the pre-trained encoder."
+        parser.add_argument("-model", "--modelpath", type=str, action="store",
+                            metavar="pretrained_encoder_path", required=True, help=help)
+
     # parse the arguments and return the result
     return parser.parse_args(arg)
 
