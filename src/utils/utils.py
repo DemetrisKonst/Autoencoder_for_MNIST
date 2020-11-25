@@ -4,6 +4,7 @@ import logging
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+from tensorflow.keras.models import save_model, load_model
 
 
 def parse_input(arg=None, autoencoder=True):
@@ -100,6 +101,20 @@ def parse_labelset(filepath):
 
     # return the labels
     return labels
+
+
+def save_keras_model(model, model_path):
+    """ Function used to save a model in a specific path """
+
+    # just save the model
+    save_model(model, model_path)
+
+
+def load_keras_model(model_path):
+    """ Function used to load a model from a specific path """
+
+    # just save the model
+    return load_model(model_path)
 
 
 def print_image(image, rows, columns):
