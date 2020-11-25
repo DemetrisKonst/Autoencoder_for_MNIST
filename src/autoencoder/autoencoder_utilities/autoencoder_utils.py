@@ -150,14 +150,7 @@ def create_autoencoder(rows, columns, encoder, decoder):
     # create the model and return it
     autoencoder = Model(input, x, name="autoencoder")
     return autoencoder
-
-
-def save_keras_model(model, model_path):
-    """ Function used to save a model in a specific path """
-
-    # just save the model
-    save_model(model, model_path)
-
+    
 
 def show_experiment_graph(history):
     """ Function used to show the Loss vs Epochs graph of one experiment """

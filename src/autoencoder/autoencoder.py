@@ -12,7 +12,7 @@ sys.path.append("autoencoder_utilities")
 
 from utils import *
 from autoencoder_utils import *
-from autoencoder_interface_utils import get_autoencoder_input, get_option, get_graph_option
+from autoencoder_interface_utils import *
 
 
 
@@ -35,8 +35,8 @@ def main(args):
     X = X / 255.
 
     # split data to training and validation
-    PANATHA = 13
-    X_train, X_val = train_test_split(X, test_size=0.15, random_state=PANATHA, shuffle=True)
+    PELATES = 13
+    X_train, X_val = train_test_split(X, test_size=0.15, random_state=PELATES, shuffle=True)
 
     # use the list below to keep track of the configurations used for every experiment
     configurations = []
