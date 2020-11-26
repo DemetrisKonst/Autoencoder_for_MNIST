@@ -13,6 +13,7 @@ sys.path.append("classification_utilities")
 
 from utils import *
 from classification_utils import *
+from interface_utils import *
 from classification_interface_utils import *
 
 def main(args):
@@ -72,6 +73,7 @@ def main(args):
     configurations = []
     # use the list below to keep track of the histories returned from each experiment
     histories = []
+    histories_ft = []
 
     # the option provided by the user
     option = 1
@@ -100,17 +102,19 @@ def main(args):
                                   shuffle=True, validation_data=(X_val, Y_val),
                                   callbacks=[callback])
 
+        histories.append(history)
+
         encoder.trainable = True
 
         print()
         classifier.summary()
 
-        history = classifier.fit(X_train, Y_train, batch_size=batch_size, epochs=epochs,
+        history_ft = classifier.fit(X_train, Y_train, batch_size=batch_size, epochs=epochs,
                                   shuffle=True, validation_data=(X_val, Y_val),
                                   callbacks=[callback])
 
         # save this history
-        histories.append(history)
+        histories_ft.append(history_ft)
 
         # get the new option from the user
         option = get_option()
@@ -126,7 +130,7 @@ def main(args):
                 # distinguish the answer
                 if answer == 1:
                     # show the graph for the current experiment
-                    show_experiment_graph(history)
+                    show_experiment_graph(history, history_ft)
                 else:
                     # call the appropriate function to show the graphs of losses
                     show_graphs(histories, configurations)
