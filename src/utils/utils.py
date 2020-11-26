@@ -145,3 +145,13 @@ def plot_image(image):
     # plot and show the image
     plt.imshow(image, cmap="gray")
     plt.show()
+
+
+def get_same_padding(conv_kernel_size):
+    """ function that returns the amount of padding that should be done in a convolution to achieve
+        same padding, with stride equal to (1, 1). """
+    # divide both sides by 2 since pytorch places padding on both sides of a tensor
+    rows_pad = (conv_kernel_size[0] - 1) // 2
+    columns_pad = (conv_kernel_size[1] - 1) // 2
+    # return the result
+    return (rows_pad, columns_pad)
