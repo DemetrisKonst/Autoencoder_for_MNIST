@@ -145,7 +145,7 @@ def plot_image(image):
     # plot and show the image
     plt.imshow(image, cmap="gray")
     plt.show()
-
+    
 
 def plot_example_images(images, label, pred):
     fig=plt.figure(figsize=(12, 9))
@@ -157,3 +157,7 @@ def plot_example_images(images, label, pred):
         im.title.set_text(title)
         plt.imshow(images[i], cmap='gray')
     plt.show()
+    rows_pad = (conv_kernel_size[0] - 1) // 2
+    columns_pad = (conv_kernel_size[1] - 1) // 2
+    # return the result
+    return (rows_pad, columns_pad)

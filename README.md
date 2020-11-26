@@ -42,6 +42,10 @@ The decoder consists of "sets" of [Convolutional](https://keras.io/api/layers/co
 4. Padding is always "same", that is, the dimension of the output images from the convolutions have the same dimension as the input image.
 <br> </br>
 
+## Classifier
+
+### TODO: DIMITRIS
+
 
 ## Benchmarks
 Benchmarks for each part of the project can be found in the [benchmarks](benchmarks) directory.
@@ -62,3 +66,5 @@ Benchmarks for each part of the project can be found in the [benchmarks](benchma
     $ python3 autoencoder.py -d ../../Dataset/train-images-idx3-ubyte < input.txt
     ```
 2. To run the classifier, 
+### TODO: DIMITRIS
+
