@@ -4,6 +4,7 @@ from tensorflow.keras import optimizers
 from tensorflow.keras.models import Model, save_model
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelBinarizer
 
 import logging
 import sys
@@ -33,6 +34,10 @@ def main(args):
     # get the data from the training set
     Y = parse_labelset(args.datalabels)
 
+    lb = LabelBinarizer()
+
+    Y = lb.fit_transform(Y)
+
     # first make sure that the path to the provided dataset is valid
     if filepath_is_not_valid(args.test):
         logging.error("The path {} is not a file. Aborting..".format(args.test))
@@ -47,12 +52,16 @@ def main(args):
         exit()
 
     # get the data from the training set
-    Y_test = parse_dataset(args.testlabels)
+    Y_test = parse_labelset(args.testlabels)
+
+    Y_test = lb.transform(Y_test)
 
     # reshape so that the shapes are (number_of_images, rows, columns, 1)
     X = X.reshape(-1, rows, columns, 1)
+    X_test = X_test.reshape(-1, rows, columns, 1)
     # normalize
     X = X / 255.
+    X_test = X_test / 255.
 
     # split data to training and validation
     PELATES = 13
@@ -74,7 +83,8 @@ def main(args):
         units, epochs, batch_size = configuration
 
 
-        encoder = load_keras_model(args.model_path)
+        encoder = load_keras_model(args.modelpath)
+        encoder.trainable = False
 
         classifier = create_classifier(rows, columns, encoder, units)
         print()
@@ -84,7 +94,16 @@ def main(args):
                                       cooldown=0, min_lr=1e-8, verbose=1)
         # callback = EarlyStopping(monitor="val_loss")
 
-        classifier.compile(optimizer=optimizers.Adam(1e-3), loss="mse", metrics=["mse"])
+        classifier.compile(optimizer=optimizers.Adam(1e-3), loss="categorical_crossentropy", metrics=["categorical_crossentropy", "accuracy"])
+
+        history = classifier.fit(X_train, Y_train, batch_size=batch_size, epochs=epochs,
+                                  shuffle=True, validation_data=(X_val, Y_val),
+                                  callbacks=[callback])
+
+        encoder.trainable = True
+
+        print()
+        classifier.summary()
 
         history = classifier.fit(X_train, Y_train, batch_size=batch_size, epochs=epochs,
                                   shuffle=True, validation_data=(X_val, Y_val),
@@ -113,7 +132,7 @@ def main(args):
                     show_graphs(histories, configurations)
 
             else:
-                print("not yet implemented dude")
+                show_results(classifier, X_test, Y_test)
 
             # get the new option from the user
             option = get_option()

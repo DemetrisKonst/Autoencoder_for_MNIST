@@ -3,9 +3,19 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras import Sequential, optimizers
-from tensorflow.keras.layers import Input, Conv2D, BatchNormalization, MaxPooling2D, UpSampling2D, LeakyReLU
+from tensorflow.keras.layers import Input, Dense, Flatten, LeakyReLU
 from tensorflow.keras.models import Model, save_model
 from tensorflow.keras.activations import relu, softmax
+from tensorflow.keras.losses import CategoricalCrossentropy
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report, accuracy_score
+import random
+
+import logging
+import sys
+sys.path.append("../../utils")
+
+from utils import *
 
 
 def create_classifier(rows, columns, encoder, units):
@@ -19,7 +29,7 @@ def create_classifier(rows, columns, encoder, units):
     x = input
 
     # pass the input through the encoder
-    x = encoder(input)(x)
+    x = encoder(x)
 
     x = Flatten()(x)
     # pass then the result through the dense layer
@@ -58,8 +68,8 @@ def show_graphs(histories, configurations):
     experiments = len(histories)
 
     # get the last losses of each experiment
-    train_losses = [history.history["mse"][-1] for history in histories]
-    val_losses = [history.history["val_mse"][-1] for history in histories]
+    train_losses = [history.history["categorical_crossentropy"][-1] for history in histories]
+    val_losses = [history.history["val_categorical_crossentropy"][-1] for history in histories]
 
     # now fix the x labels to match every experiment
     xlabels = []
@@ -83,3 +93,39 @@ def show_graphs(histories, configurations):
     plt.ylabel("Losses")
     plt.legend()
     plt.show()
+
+
+def show_results(classifier, X_test, Y_test):
+    Y_pred = classifier.predict(X_test)
+
+    cce = CategoricalCrossentropy()
+    loss = cce(Y_test, Y_pred).numpy()
+    print("Test Loss: ", loss)
+
+    Y_pred = np.round(Y_pred, 0)
+    Y_pred = Y_pred.astype(int)
+
+    accuracy = accuracy_score(Y_test, Y_pred)
+    print("Test Accuracy: ", accuracy)
+
+    true_accuracy = accuracy_score(Y_test, Y_pred, normalize=False)
+    print("Found ", true_accuracy, " correct labels")
+    print("Found ", (Y_test.shape[0]-true_accuracy), " incorrect labels")
+
+    target_names = ["Class 0", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9"]
+    report = classification_report(Y_test, Y_pred, target_names=target_names)
+    print(report)
+
+
+    random_idx = random.randint(0, X_test.shape[0])
+    subset_size = 12
+
+    X_subset = X_test[random_idx: random_idx+subset_size]
+    Y_subset = Y_test[random_idx: random_idx+subset_size]
+
+    subset_pred = classifier.predict(X_subset)
+
+    Y_subset_class = np.argmax(Y_subset, 1)
+    subset_pred_class = np.argmax(subset_pred, 1)
+
+    plot_example_images(X_subset, Y_subset_class, subset_pred_class)
