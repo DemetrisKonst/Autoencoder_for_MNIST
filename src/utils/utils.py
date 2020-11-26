@@ -145,19 +145,22 @@ def plot_image(image):
     # plot and show the image
     plt.imshow(image, cmap="gray")
     plt.show()
-    
 
-def plot_example_images(images, label, pred):
-    fig=plt.figure(figsize=(12, 9))
-    columns = 3
-    rows = 4
+
+def plot_example_images(title, images, label, pred):
+    fig=plt.figure(figsize=(9, 12))
+    fig.suptitle(title, fontsize=14)
+    fig.tight_layout(pad=3.0)
+    columns = 4
+    rows = 3
     for i in range(len(pred)):
         im = fig.add_subplot(rows, columns, i+1)
-        title = "Predicted {}, Class {}".format(pred[i], label[i])
+        title = "Predicted {}, Class {}".format(pred[i][0], label[i][0])
         im.title.set_text(title)
         plt.imshow(images[i], cmap='gray')
+
     plt.show()
-    rows_pad = (conv_kernel_size[0] - 1) // 2
-    columns_pad = (conv_kernel_size[1] - 1) // 2
-    # return the result
-    return (rows_pad, columns_pad)
+    # rows_pad = (conv_kernel_size[0] - 1) // 2
+    # columns_pad = (conv_kernel_size[1] - 1) // 2
+    # # return the result
+    # return (rows_pad, columns_pad)

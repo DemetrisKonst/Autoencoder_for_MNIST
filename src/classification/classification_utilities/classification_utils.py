@@ -41,12 +41,17 @@ def create_classifier(rows, columns, encoder, units):
     return classifier
 
 
-def show_experiment_graph(history):
+def show_experiment_graph(history, history_ft):
     """ Function used to show the Loss vs Epochs graph of one experiment """
 
     # get the losses
-    train_losses = history.history["mse"]
-    val_losses = history.history["val_mse"]
+    train_losses = []
+    train_losses.append(history.history["categorical_crossentropy"])
+    train_losses.append(history_ft.history["categorical_crossentropy"])
+
+    val_losses = []
+    val_losses.append(history.history["val_categorical_crossentropy"])
+    val_losses.append(history_ft.history["val_categorical_crossentropy"])
 
     # plot the losses
     epochs = len(train_losses)
@@ -117,15 +122,31 @@ def show_results(classifier, X_test, Y_test):
     print(report)
 
 
-    random_idx = random.randint(0, X_test.shape[0])
-    subset_size = 12
+    Y_result = (np.argmax(Y_pred, 1) == np.argmax(Y_test, 1))
 
-    X_subset = X_test[random_idx: random_idx+subset_size]
-    Y_subset = Y_test[random_idx: random_idx+subset_size]
+    print(np.argmax(Y_pred, 1)[:10])
+    print(np.argmax(Y_test, 1)[:10])
+    print(Y_result[:10])
 
-    subset_pred = classifier.predict(X_subset)
+    indices_correct = np.argwhere(Y_result==True)
+    indices_incorrect = np.argwhere(Y_result==False)
 
-    Y_subset_class = np.argmax(Y_subset, 1)
-    subset_pred_class = np.argmax(subset_pred, 1)
+    print(X_test.shape)
 
-    plot_example_images(X_subset, Y_subset_class, subset_pred_class)
+    np.random.shuffle(indices_correct)
+    np.random.shuffle(indices_incorrect)
+
+    print(indices_correct[:12])
+    print(indices_incorrect[:12])
+
+    images_correct = [X_test[idx][0] for idx in indices_correct[:12]]
+    imc_label = [np.argmax(Y_test, 1)[idx] for idx in indices_correct[:12]]
+    imc_pred = [np.argmax(Y_pred, 1)[idx] for idx in indices_correct[:12]]
+
+    images_incorrect = [X_test[idx][0] for idx in indices_incorrect[:12]]
+    iminc_label = [np.argmax(Y_test, 1)[idx] for idx in indices_incorrect[:12]]
+    iminc_pred = [np.argmax(Y_pred, 1)[idx] for idx in indices_incorrect[:12]]
+
+
+    plot_example_images("Correct Predictions", images_correct, imc_label, imc_pred)
+    plot_example_images("Incorrect Predictions", images_incorrect, iminc_label, iminc_pred)
