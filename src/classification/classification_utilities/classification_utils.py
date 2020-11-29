@@ -20,7 +20,7 @@ from utils import *
 
 def create_classifier(rows, columns, encoder, units):
     """
-    Function that given the encoder part and the dense part of a classifier, creates a "Model"
+    Function that, given the encoder part, creates a "Model"
     (Keras object) that represents a classifier.
     """
 
@@ -31,8 +31,10 @@ def create_classifier(rows, columns, encoder, units):
     # pass the input through the encoder
     x = encoder(x)
 
+    # flatten
     x = Flatten()(x)
-    # pass then the result through the dense layer
+
+    # pass then the result through two fully-connected layers
     x = Dense(units=units, activation='relu')(x)
     x = Dense(units=10, activation='softmax')(x)
 
@@ -101,52 +103,55 @@ def show_graphs(histories, configurations):
 
 
 def show_results(classifier, X_test, Y_test):
+    """ function used to print the results of a trained model (classification report etc.) """
+    # apply the test set on the trained model
     Y_pred = classifier.predict(X_test)
 
+    # calculate the loss
     cce = CategoricalCrossentropy()
     loss = cce(Y_test, Y_pred).numpy()
-    print("Test Loss: ", loss)
+    print("Test Loss: ", loss, "\n")
 
     Y_pred = np.round(Y_pred, 0)
     Y_pred = Y_pred.astype(int)
 
-    accuracy = accuracy_score(Y_test, Y_pred)
-    print("Test Accuracy: ", accuracy)
+    # undo the binarization ([0,0,0,1] -> 4 etc.)
+    Y_pred_unbin = np.argmax(Y_pred, 1)
+    Y_test_unbin = np.argmax(Y_test, 1)
 
-    true_accuracy = accuracy_score(Y_test, Y_pred, normalize=False)
-    print("Found ", true_accuracy, " correct labels")
-    print("Found ", (Y_test.shape[0]-true_accuracy), " incorrect labels")
+    # calculate the accuracy
+    accuracy = accuracy_score(Y_test_unbin, Y_pred_unbin)
+    print("Test Accuracy: ", accuracy, "\n")
 
+    # find the amount of correct and incorrect predictions
+    true_accuracy = accuracy_score(Y_test_unbin, Y_pred_unbin, normalize=False)
+    print("Found ", true_accuracy, " correct labels", "\n")
+    print("Found ", (Y_test.shape[0]-true_accuracy), " incorrect labels", "\n")
+
+    # build the classification report
     target_names = ["Class 0", "Class 1", "Class 2", "Class 3", "Class 4", "Class 5", "Class 6", "Class 7", "Class 8", "Class 9"]
-    report = classification_report(Y_test, Y_pred, target_names=target_names)
-    print(report)
+    report = classification_report(Y_test_unbin, Y_pred_unbin, target_names=target_names)
+    print(report, "\n")
 
 
-    Y_result = (np.argmax(Y_pred, 1) == np.argmax(Y_test, 1))
-
-    print(np.argmax(Y_pred, 1)[:10])
-    print(np.argmax(Y_test, 1)[:10])
-    print(Y_result[:10])
-
+    # find the indices of images where the model predicted correctly/incorrectly
+    Y_result = (Y_test_unbin == Y_pred_unbin)
     indices_correct = np.argwhere(Y_result==True)
     indices_incorrect = np.argwhere(Y_result==False)
 
-    print(X_test.shape)
-
+    # shuffle those indices
     np.random.shuffle(indices_correct)
     np.random.shuffle(indices_incorrect)
 
-    print(indices_correct[:12])
-    print(indices_incorrect[:12])
-
+    # get the first 12 indices from both lists and plot the image, the prediction and the actual label
     images_correct = [X_test[idx][0] for idx in indices_correct[:12]]
-    imc_label = [np.argmax(Y_test, 1)[idx] for idx in indices_correct[:12]]
-    imc_pred = [np.argmax(Y_pred, 1)[idx] for idx in indices_correct[:12]]
+    im_c_label = [np.argmax(Y_test, 1)[idx] for idx in indices_correct[:12]]
+    im_c_pred = [np.argmax(Y_pred, 1)[idx] for idx in indices_correct[:12]]
 
     images_incorrect = [X_test[idx][0] for idx in indices_incorrect[:12]]
-    iminc_label = [np.argmax(Y_test, 1)[idx] for idx in indices_incorrect[:12]]
-    iminc_pred = [np.argmax(Y_pred, 1)[idx] for idx in indices_incorrect[:12]]
+    im_inc_label = [np.argmax(Y_test, 1)[idx] for idx in indices_incorrect[:12]]
+    im_inc_pred = [np.argmax(Y_pred, 1)[idx] for idx in indices_incorrect[:12]]
 
 
-    plot_example_images("Correct Predictions", images_correct, imc_label, imc_pred)
-    plot_example_images("Incorrect Predictions", images_incorrect, iminc_label, iminc_pred)
+    plot_example_images("Correct Predictions", images_correct, im_c_label, im_c_pred)
+    plot_example_images("Incorrect Predictions", images_incorrect, im_inc_label, im_inc_pred)
