@@ -148,9 +148,9 @@ def plot_image(image):
 
 
 def plot_example_images(title, images, label, pred):
+    """ fuction used to plot, in one figure, 12 images with their predicted and actual labels """
     fig=plt.figure(figsize=(9, 12))
     fig.suptitle(title, fontsize=14)
-    fig.tight_layout(pad=3.0)
     columns = 4
     rows = 3
     for i in range(len(pred)):
@@ -159,8 +159,5 @@ def plot_example_images(title, images, label, pred):
         im.title.set_text(title)
         plt.imshow(images[i], cmap='gray')
 
+    fig.tight_layout()
     plt.show()
-    # rows_pad = (conv_kernel_size[0] - 1) // 2
-    # columns_pad = (conv_kernel_size[1] - 1) // 2
-    # # return the result
-    # return (rows_pad, columns_pad)
