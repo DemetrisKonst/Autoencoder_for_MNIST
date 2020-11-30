@@ -76,3 +76,5 @@ Benchmarks for each part of the project can be found in the [benchmarks](benchma
     
     The user will then be prompted to tweak the hyperparameters of the model. Analytically, the number of units in the hidden fully-connected layer, the number of epochs and the batch size.
 
+# GitHub Repository
+The GitHub repository for this project is in the following [link](https://github.com/AndrewSpano/Autoencoder_for_MNIST/blob/main/README.md)
