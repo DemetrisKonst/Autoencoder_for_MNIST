@@ -32,7 +32,9 @@ We can clearly see that validation loss is actually increasing while we increase
 
 #### Encoder 2
 
+![image](./images/classifier_units_2.png)
 
+In comparison with the 1st encoder, the results are horrendous, the highest validation loss was at 0.14 on 512 units. In this experiment, the lowest validation loss is 0.625. This is achieved on 32 units. It may be the best option among them, but it remains terrible. It seems that the usage of 3rd Max Pooling has significantly hindered the model's ability to predict correctly.
 
 ## Number of epochs
 The following images display the results of the classifier when only the number of epochs is tweaked while everything else remains the same.
