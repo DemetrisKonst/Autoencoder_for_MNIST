@@ -68,7 +68,9 @@ Along all tests, training loss is at almost 0. The change in the validation loss
 
 #### Encoder 2
 
+![image](./images/classifier_bs_2.png)
 
+As expected, the experiment on the 2nd decoder is again disappointing. The findings from this experiment should not be taken into consideration as it is clear that the whole architecture is ill-suited for a classifier. 
 
 ## Environment
 - These experiments were executed using Colab, since it allows us to use its GPU. The relevant Notebook can he found in the [Notebook](../Notebook) directory.
