@@ -62,7 +62,9 @@ Analytically, the hyperparameter values that we will use for both encoder models
 
 #### Encoder 1
 
+![image](./images/classifier_bs_1.png)
 
+Along all tests, training loss is at almost 0. The change in the validation loss is sort-of decreasing by the increase in batch size. The best option seems to be a batch size of 128 with a validation loss of 0.075.
 
 #### Encoder 2
 
