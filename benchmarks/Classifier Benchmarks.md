@@ -50,13 +50,15 @@ For epoch values of 1, 5, 15 the model seems to be slightly underfitting. At 25 
 
 #### Encoder 2
 
+![image](./images/classifier_epochs_2.png)
 
+Yet again, the 2nd encoder seems to perform dramatically worse than its counterpart. Although the validation loss is steadily decreasing for values 1, 5, 15, we reach a dead-end on the 2 higher values. It is clear that the classifier has a hard cap on accuracy due to the architecture selected.
 
 ## Batch Size
 The following images display the results of the classifier when only the batch size is tweaked while everything else remains the same.
 Analytically, the hyperparameter values that we will use for both encoder models are: 
 - Units = 64
-- Epochs = 15
+- Epochs = 25
 
 #### Encoder 1
 
