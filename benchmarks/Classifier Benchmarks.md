@@ -35,6 +35,10 @@ We can clearly see that validation loss is actually increasing while we increase
 
 
 ## Number of epochs
+The following images display the results of the classifier when only the number of epochs is tweaked while everything else remains the same.
+Analytically, the hyperparameter values that we will use for both encoder models are: 
+- Units = 64
+- Batch Size = 16
 
 #### Encoder 1
 
@@ -45,6 +49,10 @@ We can clearly see that validation loss is actually increasing while we increase
 
 
 ## Batch Size
+The following images display the results of the classifier when only the batch size is tweaked while everything else remains the same.
+Analytically, the hyperparameter values that we will use for both encoder models are: 
+- Units = 64
+- Epochs = 15
 
 #### Encoder 1
 
@@ -55,3 +63,6 @@ We can clearly see that validation loss is actually increasing while we increase
 
 
 ## Environment
+- These experiments were executed using Colab, since it allows us to use its GPU. The relevant Notebook can he found in the [Notebook](../Notebook) directory.
+
+- Also note that in order to run the above experiments, only small modifications need to be made in the code. You are free to experiment however you want, keep in mind that the usage of it is more "dev-oriented". We have removed the interface methods and the user needs to simply set the parameter's values to the way he sees fit.
