@@ -44,7 +44,9 @@ Analytically, the hyperparameter values that we will use for both encoder models
 
 #### Encoder 1
 
+![image](./images/classifier_epochs_1.png)
 
+For epoch values of 1, 5, 15 the model seems to be slightly underfitting. At 25 epochs, validation loss reaches a minimum and at 50 epochs the validation loss suddenly increases leading us to believe that the model is overfitting.
 
 #### Encoder 2
 
