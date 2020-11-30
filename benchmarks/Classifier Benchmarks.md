@@ -24,7 +24,9 @@ Analytically, the hyperparameter values that we will use are: Epochs = 15, Batch
 
 #### Encoder 1
 
+![image](./images/classifier_units_1.png)
 
+We can clearly see that validation loss is acutally increasing while we increase the number of units in the fully-connected layer. On the other side, training loss is decreasing. Hence, we can deduce that more units will lead to easier overfitting of the model.
 
 #### Encoder 2
 
