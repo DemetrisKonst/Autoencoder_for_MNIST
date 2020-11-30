@@ -2,7 +2,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 from tensorflow.keras import optimizers
 from tensorflow.keras.models import Model, save_model
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.callbacks import ReduceLROnPlateau
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelBinarizer
 
@@ -91,7 +91,6 @@ def main(args):
         # setup the classifier
         callback = ReduceLROnPlateau(monitor="val_loss", factor=1.0/2, patience=4, min_delta=0.005,
                                       cooldown=0, min_lr=1e-8, verbose=1)
-        # callback = EarlyStopping(monitor="val_loss")
 
         classifier.compile(optimizer=optimizers.Adam(1e-3), loss="categorical_crossentropy", metrics=["categorical_crossentropy", "accuracy"])
 
