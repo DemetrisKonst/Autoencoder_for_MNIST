@@ -43,9 +43,13 @@ The decoder consists of "sets" of [Convolutional](https://keras.io/api/layers/co
 <br> </br>
 
 ## Classifier
+The 2nd part of this project is a classifier. This classifier consists of two parts, the encoder and the [Fully-Connected](https://keras.io/api/layers/core_layers/dense/) layers. The encoder is the same that is generated from the 1st part. When the 1st part is executed, there is an option to save the encoder model with its weights and then migrate it to the classifier. The second part consists of the following:
+1. One [Flatten](https://keras.io/api/layers/reshaping_layers/flatten/) layer which takes in the output of the encoder and formats it to be used in a fully-connected layer
+2. One fully-connected layer which takes in as an input the flattened encoder output and the number of units used are determined by the user
+3. One final fully-connected which takes in as input the output of the previous fully-connected and the output is 10 units (1 for each class)
 
-### TODO: DIMITRIS
-
+##### Fine-Tuning
+The training is split in two steps. First, only the fully-connected parts are trained, then the whole model is trained. This is achieved by [Freezing](https://keras.io/guides/transfer_learning/) the encoder model's weights. In essence, the model is trained 2 * epochs times.
 
 ## Benchmarks
 Benchmarks for each part of the project can be found in the [benchmarks](benchmarks) directory.
@@ -65,6 +69,10 @@ Benchmarks for each part of the project can be found in the [benchmarks](benchma
     ```bash
     $ python3 autoencoder.py -d ../../Dataset/train-images-idx3-ubyte < input.txt
     ```
-2. To run the classifier, 
-### TODO: DIMITRIS
+2. To run the classifier, it is necessary to have an encoder model saved from the autoencoder executable. Assuming that, the user will already have downloaded the MNIST Dataset. Afterwards, you will have to navigate to the [src/classification](src/classification) directory and type the following command:
+    ```bash
+    $ python3 classification.py -d <training_set path> -dl <training_labels path> -t <test_set path> -tl <test_labels path> -model <encoder path>
+    ```
+    
+    The user will then be prompted to tweak the hyperparameters of the model. Analytically, the number of units in the hidden fully-connected layer, the number of epochs and the batch size.
 
