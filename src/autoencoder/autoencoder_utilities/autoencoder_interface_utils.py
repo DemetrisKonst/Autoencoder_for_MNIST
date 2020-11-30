@@ -86,7 +86,7 @@ def get_kernel_sizes(conv_layers=DEFAULT_CONV_LAYERS):
 
                 # break if it succeeds
                 break
-            # else raise a value error as the number of kernel sizes provided was not correct
+            # else raise a value error as the number of kernel sizes provided were not correct
             else:
                 raise UnequalLenError
 
@@ -138,7 +138,7 @@ def get_filters(conv_layers=DEFAULT_CONV_LAYERS):
                 filters = [int(filter) for filter in split_filters]
                 # break if it succeeds
                 break
-            # else raise a value error as the number of kernel sizes provided was not correct
+            # else raise a value error as the number of filters provided were not correct
             else:
                 raise UnequalLenError
 
@@ -198,7 +198,9 @@ def get_autoencoder_input():
     filters = get_filters(conv_layers)
     epochs = get_epochs()
     batch_size = get_batch_size()
-    use_third_maxpool = get_usage_of_third_maxpool()
+    use_third_maxpool = False
+    if conv_layers >= 3:
+        use_third_maxpool = get_usage_of_third_maxpool()
 
     # print some newlines and retun the values as a quintuple (5-tuple)
     print("\n")
